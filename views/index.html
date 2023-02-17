@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Timestamp Microservice</title>
+  </head>
+  
+  <body>
+    <h1>Timestamp Microservice</h1>
+    <p>
+      This app returns the Unix timestamp and UTC time for a given date string.
+    </p>
+    <form id="date-form">
+      <label for="date-input">Enter a date:</label>
+      <input type="text" id="date-input" name="date" />
+      <button type="submit">Submit</button>
+    </form>
+    <div id="output"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const form = document.querySelector('#date-form');
+      const output = document.querySelector('#output');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dateInput = document.querySelector('#date-input').value;
+        try {
+          const response = await axios.get(`/api/${dateInput}`);
+          const { unix, utc } = response.data;
+          output.innerHTML = `
+            <p>Unix timestamp: ${unix}</p>
+            <p>UTC time: ${utc}</p>
+          `;
+        } catch (error) {
+          output.innerHTML = `<p>Error: ${error.response.data.error}</p>`;
+        }
+      });
+    </script>
+  </body>
+</html>
